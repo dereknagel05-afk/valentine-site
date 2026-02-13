@@ -1,301 +1,645 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💛</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>❤</title>
 
-<style>
-:root{
-  --bg:#f7efe0;
-  --panel:#fff7ea;
-  --ink:#2b2b2b;
-  --border:#3a2f2a;
-  --shadow:rgba(0,0,0,0.15);
-  --heart:rgba(255,90,120,0.25);
-  --pixel:"Courier New",monospace;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  min-height:100vh;
-  background:var(--bg);
-  font-family:var(--pixel);
-  color:var(--ink);
-}
+  <style>
+    :root{
+      --bg: #f7efe0;         /* beige */
+      --panel: #fff7ea;
+      --ink: #2b2b2b;
+      --border: #3a2f2a;
+      --shadow: rgba(0,0,0,0.15);
+      --heart: rgba(255, 90, 120, 0.25);
+      --pixel: "Courier New", Courier, monospace;
+    }
 
-.bg-hearts{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 10% 20%, var(--heart) 0 12px, transparent 13px),
-    radial-gradient(circle at 30% 70%, var(--heart) 0 10px, transparent 11px),
-    radial-gradient(circle at 70% 30%, var(--heart) 0 14px, transparent 15px),
-    radial-gradient(circle at 85% 75%, var(--heart) 0 11px, transparent 12px);
-  opacity:.7;
-}
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      font-family: var(--pixel);
+      color: var(--ink);
+      overflow-x:hidden;
+    }
 
-.game{max-width:1100px;margin:auto;padding:18px}
+    .bg-hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 10% 20%, var(--heart) 0 12px, transparent 13px),
+        radial-gradient(circle at 30% 70%, var(--heart) 0 10px, transparent 11px),
+        radial-gradient(circle at 70% 30%, var(--heart) 0 14px, transparent 15px),
+        radial-gradient(circle at 85% 75%, var(--heart) 0 11px, transparent 12px),
+        radial-gradient(circle at 50% 50%, rgba(255, 90, 120, 0.18) 0 9px, transparent 10px);
+      opacity: 0.7;
+      filter: blur(0.2px);
+    }
 
-.title{
-  font-size:18px;
-  padding:10px;
-  background:var(--panel);
-  border:4px solid var(--border);
-  box-shadow:6px 6px 0 var(--shadow);
-  margin-bottom:14px;
-}
+    .game{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px 28px;
+    }
 
-.scene{
-  display:grid;
-  grid-template-columns:1fr 520px;
-  gap:18px;
-}
+    .topbar{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-start;
+      margin-bottom: 14px;
+    }
+    .title{
+      font-size: 18px;
+      letter-spacing: 1px;
+      padding: 10px 12px;
+      background: var(--panel);
+      border: 4px solid var(--border);
+      box-shadow: 6px 6px 0 var(--shadow);
+    }
+    .hint{
+      font-size: 12px;
+      opacity: 0.85;
+    }
+    .key{
+      display:inline-block;
+      padding: 2px 6px;
+      border: 2px solid var(--border);
+      background: #fff;
+    }
 
-.char{
-  padding:12px;
-  background:var(--panel);
-  border:4px solid var(--border);
-  box-shadow:6px 6px 0 var(--shadow);
-  margin-bottom:14px;
-}
+    .scene{
+      display:grid;
+      grid-template-columns: 1fr 520px;
+      gap: 18px;
+      align-items:start;
+    }
 
-.sprite-wrap{position:relative;height:120px}
+    .characters{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
 
-.sprite{
-  width:120px;height:120px;
-  border:3px solid var(--border);
-  background:#fff;
-  image-rendering:pixelated;
-}
+    .char{
+      padding: 12px;
+      background: var(--panel);
+      border: 4px solid var(--border);
+      box-shadow: 6px 6px 0 var(--shadow);
+    }
 
-.dino{background:#8ccf7a}
-.unicorn{background:#d9c7ff}
+    .sprite-wrap{
+      position:relative;
+      height: 120px;
+      display:flex;
+      align-items:flex-end;
+      gap: 12px;
+    }
 
-.head{
-  position:absolute;
-  width:48px;height:48px;
-  left:14px;bottom:56px;
-  border:3px solid var(--border);
-  background:#fff;
-  opacity:0;
-}
+    .sprite{
+      width: 120px;
+      height: 120px;
+      border: 3px solid var(--border);
+      background: #fff;
+      image-rendering: pixelated;
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
 
-.bubble{
-  margin-top:8px;
-  padding:10px;
-  border:3px solid var(--border);
-  background:#fff;
-}
+    /* Simple pixel-ish “sprites” via gradients */
+    .dino{
+      background:
+        linear-gradient(#0000 0 0),
+        linear-gradient(#8ccf7a 0 0);
+      background-size: 100% 100%;
+      position:relative;
+    }
+    .dino::before{
+      content:"";
+      position:absolute;
+      inset: 18px 18px 30px 18px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 6px, rgba(255,255,255,0) 6px 12px);
+      opacity:0.4;
+    }
+    .unicorn{
+      background:
+        linear-gradient(#0000 0 0),
+        linear-gradient(#d9c7ff 0 0);
+      background-size: 100% 100%;
+      position:relative;
+    }
+    .unicorn::after{
+      content:"";
+      position:absolute;
+      width: 18px;
+      height: 40px;
+      right: 18px;
+      top: 10px;
+      background: linear-gradient(#ffe08a, #f7b34a);
+      border: 2px solid var(--border);
+      transform: skewX(-10deg);
+    }
 
-.portrait-frame{
-  position:relative;
-  width:520px;height:520px;
-  border:4px solid var(--border);
-  background:var(--panel);
-  box-shadow:8px 8px 0 var(--shadow);
-  overflow:hidden;
-}
-#portrait{width:100%;height:100%;object-fit:cover}
-#sparkCanvas{position:absolute;inset:0}
+    /* “Head” overlay for talking animation */
+    .head{
+      position:absolute;
+      width: 48px;
+      height: 48px;
+      left: 14px;
+      bottom: 56px;
+      border: 3px solid var(--border);
+      background: #fff;
+      image-rendering: pixelated;
+      box-shadow: 3px 3px 0 var(--shadow);
+      opacity:0; /* off unless talking */
+      transform-origin: 50% 70%;
+    }
+    #dinoHead{ background: linear-gradient(#8ccf7a, #74b764); }
+    #uniHead{ background: linear-gradient(#d9c7ff, #bfa6ff); }
 
-.dialog-box{
-  margin-top:18px;
-  padding:14px;
-  background:var(--panel);
-  border:4px solid var(--border);
-  box-shadow:8px 8px 0 var(--shadow);
-}
+    .nameplate{
+      margin-top: 8px;
+      font-size: 12px;
+      opacity:0.85;
+    }
 
-.text{
-  min-height:90px;
-  font-size:16px;
-  padding:10px;
-  border:3px solid var(--border);
-  background:#fff;
-  white-space:pre-wrap;
-}
+    .bubble{
+      margin-top: 8px;
+      padding: 10px;
+      border: 3px solid var(--border);
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--shadow);
+      font-size: 14px;
+    }
 
-.controls{display:flex;gap:10px;margin-top:12px}
-.btn{
-  padding:10px 14px;
-  border:3px solid var(--border);
-  background:#fff;
-  cursor:pointer;
-}
-.yes{background:#e7ffd9}
-.no{background:#ffe3e3}
+    .portrait-area{
+      display:flex;
+      justify-content:center;
+    }
+    .portrait-frame{
+      position:relative;
+      width: 520px;
+      height: 520px;
+      background: var(--panel);
+      border: 4px solid var(--border);
+      box-shadow: 8px 8px 0 var(--shadow);
+      overflow:hidden;
+    }
+    #portrait{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
+    #sparkCanvas{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
 
-@media(max-width:980px){
-.scene{grid-template-columns:1fr}
-.portrait-frame{width:95vw;height:95vw}
-}
-</style>
+    .dialog{
+      margin-top: 18px;
+    }
+
+    .dialog-box{
+      padding: 14px;
+      background: var(--panel);
+      border: 4px solid var(--border);
+      box-shadow: 8px 8px 0 var(--shadow);
+    }
+
+    .speaker{
+      font-size: 12px;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .text{
+      min-height: 80px;
+      font-size: 16px;
+      line-height: 1.35;
+      padding: 10px;
+      border: 3px solid var(--border);
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--shadow);
+      white-space: pre-wrap;
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      margin-top: 12px;
+    }
+    .spacer{ flex:1; }
+
+    .btn{
+      font-family: var(--pixel);
+      padding: 10px 14px;
+      border: 3px solid var(--border);
+      background: #fff;
+      cursor:pointer;
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+    .btn:active{
+      transform: translate(2px,2px);
+      box-shadow: 2px 2px 0 var(--shadow);
+    }
+    .yes{
+      background: #e7ffd9;
+    }
+    .no{
+      background: #ffe3e3;
+    }
+
+    @media (max-width: 980px){
+      .scene{
+        grid-template-columns: 1fr;
+      }
+      .portrait-frame{
+        width: min(520px, 94vw);
+        height: min(520px, 94vw);
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="bg-hearts"></div>
+  <div class="bg-hearts"></div>
 
-<div class="game">
-<div class="title">❤ Choose your quest ❤</div>
+  <main class="game">
+    <header class="topbar">
+      <div class="title">❤ Choose your quest ❤</div>
+      <div class="hint">
+        Click <span class="key">Next</span> to continue dialogue
+      </div>
+    </header>
 
-<div class="scene">
+    <section class="scene">
+      <div class="characters">
+        <div class="char">
+          <div class="sprite-wrap">
+            <div id="dinoHead" class="head"></div>
+            <div class="sprite dino"></div>
+          </div>
+          <div class="nameplate">Dino</div>
+          <!-- MOD #2 -->
+          <div class="bubble" id="dinoBubble">i love you more</div>
+        </div>
 
-<div>
-<div class="char">
-<div class="sprite-wrap">
-<div id="dinoHead" class="head" style="background:#8ccf7a"></div>
-<div class="sprite dino"></div>
-</div>
-<div class="bubble">i love you more</div>
-</div>
+        <div class="char">
+          <div class="sprite-wrap">
+            <div id="uniHead" class="head"></div>
+            <div class="sprite unicorn"></div>
+          </div>
+          <div class="nameplate">Unicorn</div>
+          <!-- MOD #2 -->
+          <div class="bubble" id="uniBubble">I love you most</div>
+        </div>
+      </div>
 
-<div class="char">
-<div class="sprite-wrap">
-<div id="uniHead" class="head" style="background:#d9c7ff"></div>
-<div class="sprite unicorn"></div>
-</div>
-<div class="bubble">I love you most</div>
-</div>
-</div>
+      <div class="portrait-area">
+        <div class="portrait-frame">
+          <!-- MOD #1: png -->
+          <img id="portrait" src="sad.png" alt="portrait" />
+          <canvas id="sparkCanvas" width="520" height="520"></canvas>
+        </div>
+      </div>
+    </section>
 
-<div class="portrait-frame">
-<img id="portrait" src="sad.png">
-<canvas id="sparkCanvas" width="520" height="520"></canvas>
-</div>
+    <section class="dialog">
+      <div class="dialog-box">
+        <div class="speaker" id="speaker">Narrator</div>
+        <div class="text" id="dialogText"></div>
 
-</div>
+        <div class="controls">
+          <button id="nextBtn" class="btn">Next</button>
+          <div class="spacer"></div>
+          <button id="yesBtn" class="btn yes">Yes</button>
+          <button id="noBtn" class="btn no">No</button>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<div class="dialog-box">
-<div id="speaker">Narrator</div>
-<div id="dialogText" class="text"></div>
-
-<div class="controls">
-<button id="nextBtn" class="btn">Next</button>
-<button id="yesBtn" class="btn yes">Yes</button>
-<button id="noBtn" class="btn no">No</button>
-</div>
-</div>
-
-</div>
-
-<script>
-// Dialogue pages
-const pages=[
+  <script>
+    // --------------------
+    // MOD #3: Video-game dialogue (few lines at a time), tear-jerker, NO em dashes
+    // --------------------
+    const pages = [
+      { speaker: "Narrator", text:
 `Hey love.
 
-I built this like a little game,
-because being with you feels like a quest I want forever.`,
+I made this like a little game
+because being with you feels like a quest I want forever.` },
 
-`I still catch myself thinking about
-the smallest things you do.
+      { speaker: "Narrator", text:
+`I think about the smallest things you do.
 
-The way you look at me,
-like I am safe to be fully seen.`,
+The way you look at me
+like I am safe to be fully seen.` },
 
+      { speaker: "Narrator", text:
 `You make ordinary moments feel sacred.
 
-You make my heart calm down,
-and then you make it race again.`,
+You bring peace into me
+and you make me brave at the same time.` },
 
+      { speaker: "Narrator", text:
+`When I get scared about the future,
+I picture your hand in mine.
+
+Then I remember
+I am not facing life alone.` },
+
+      { speaker: "Narrator", text:
 `I love you when we are laughing.
-I love you when life is loud.
-I love you when things are hard,
-and you still choose kindness anyway.`,
+I love you when the day is heavy.
 
-`I am not choosing you for a season.
-I am choosing you for a lifetime.`,
+I love you because you keep choosing love,
+even when it would be easier not to.` },
 
-`Will you be my forever?
-Will you marry me?`
-];
+      { speaker: "Narrator", text:
+`I want to be the person who protects your heart.
+I want to be the place you can rest.
 
-let pageIndex=0,typing=false;
-const textEl=document.getElementById("dialogText");
-const portrait=document.getElementById("portrait");
-const dinoHead=document.getElementById("dinoHead");
-const uniHead=document.getElementById("uniHead");
+I want to build a home with you,
+in every meaning of the word.` },
 
-// typewriter
-async function typePage(txt){
-typing=true;
-textEl.textContent="";
-dinoHead.style.opacity=1;
-uniHead.style.opacity=1;
+      { speaker: "Narrator", text:
+`So here is my question,
+simple and honest.
 
-for(let i=0;i<txt.length;i++){
-textEl.textContent+=txt[i];
-dinoHead.style.transform=`translateY(${i%2?0:-2}px)`;
-uniHead.style.transform=`translateY(${i%2?0:-2}px)`;
-await new Promise(r=>setTimeout(r,24));
-}
+Will you marry me?` }
+    ];
 
-dinoHead.style.opacity=0;
-uniHead.style.opacity=0;
-typing=false;
-}
+    // Readable "game dialogue" pacing
+    const TYPE_SPEED_MS = 26;      // typing speed
+    const END_PAUSE_MS  = 700;     // pause after finishing a page
+    const LINE_BREAK_PAUSE_MS = 240; // extra pause at line breaks (helps readability)
 
-typePage(pages[0]);
+    // --------------------
+    // Elements
+    // --------------------
+    const portrait = document.getElementById("portrait");
+    const speakerEl = document.getElementById("speaker");
+    const textEl = document.getElementById("dialogText");
+    const nextBtn = document.getElementById("nextBtn");
+    const yesBtn  = document.getElementById("yesBtn");
+    const noBtn   = document.getElementById("noBtn");
 
-document.getElementById("nextBtn").onclick=()=>{
-if(!typing && pageIndex<pages.length-1){
-pageIndex++;
-typePage(pages[pageIndex]);
-}
-};
+    const dinoHead = document.getElementById("dinoHead");
+    const uniHead  = document.getElementById("uniHead");
 
-// YES action
-document.getElementById("yesBtn").onclick=()=>{
-portrait.src="happy.png";
-launchSparks();
-textEl.textContent=`You said yes.
+    let pageIndex = 0;
+    let typing = false;
+    let skipRequested = false;
+    let accepted = false;
 
-I love you.
-I am so proud to love you.
+    function sleep(ms){ return new Promise(res => setTimeout(res, ms)); }
 
-Come here.`;
-};
+    // --------------------
+    // MOD #4.1: Talking head animation while typing
+    // --------------------
+    let talkTimer = null;
+    function startTalking(){
+      dinoHead.style.opacity = "1";
+      uniHead.style.opacity  = "1";
+      let t = 0;
+      stopTalking();
+      talkTimer = setInterval(() => {
+        t++;
+        const y = (t % 2 === 0) ? -2 : 0;
+        const r = (t % 2 === 0) ? -2 : 2;
+        dinoHead.style.transform = `translateY(${y}px) rotate(${r}deg)`;
+        uniHead.style.transform  = `translateY(${y}px) rotate(${-r}deg)`;
+      }, 120);
+    }
+    function stopTalking(){
+      if (talkTimer) clearInterval(talkTimer);
+      talkTimer = null;
+      dinoHead.style.transform = "";
+      uniHead.style.transform  = "";
+      dinoHead.style.opacity = "0";
+      uniHead.style.opacity  = "0";
+    }
 
-// NO action
-document.getElementById("noBtn").onclick=()=>{
-portrait.src="sad.png";
-textEl.textContent=`That is okay.
+    async function typePage(idx){
+      const page = pages[idx];
+      speakerEl.textContent = page.speaker;
 
-I will stay right here
-until you are ready.`;
-};
+      typing = true;
+      skipRequested = false;
+      textEl.textContent = "";
 
-// pixel sparks
-const canvas=document.getElementById("sparkCanvas");
-const ctx=canvas.getContext("2d");
-let sparks=[];
+      startTalking();
 
-function launchSparks(){
-for(let i=0;i<150;i++){
-sparks.push({
-x:260,y:260,
-vx:(Math.random()-0.5)*6,
-vy:-Math.random()*7,
-g:0.2,
-life:80
-});
-}
-animate();
-}
+      const full = page.text;
+      for (let i = 0; i < full.length; i++){
+        if (skipRequested){
+          textEl.textContent = full;
+          break;
+        }
+        const ch = full[i];
+        textEl.textContent += ch;
 
-function animate(){
-ctx.clearRect(0,0,520,520);
-sparks.forEach(p=>{
-p.vy+=p.g;
-p.x+=p.vx;
-p.y+=p.vy;
-p.life--;
-ctx.fillRect(p.x,p.y,4,4);
-});
-sparks=sparks.filter(p=>p.life>0);
-if(sparks.length)requestAnimationFrame(animate);
-}
-</script>
+        // Slightly longer pauses at line breaks so it feels like a text box
+        if (ch === "\n") {
+          await sleep(LINE_BREAK_PAUSE_MS);
+        } else {
+          await sleep(TYPE_SPEED_MS);
+        }
+      }
+
+      stopTalking();
+      typing = false;
+      await sleep(END_PAUSE_MS);
+    }
+
+    async function next(){
+      if (accepted) return;
+
+      if (typing){
+        skipRequested = true;
+        return;
+      }
+      if (pageIndex < pages.length - 1){
+        pageIndex++;
+        await typePage(pageIndex);
+      }
+    }
+
+    // Start first page
+    typePage(pageIndex);
+
+    nextBtn.addEventListener("click", next);
+
+    // No button behavior
+    noBtn.addEventListener("click", () => {
+      if (accepted) return;
+      portrait.src = "sad.png";
+      speakerEl.textContent = "Narrator";
+      textEl.textContent =
+`That is okay.
+
+I am still here.
+I still choose you.`;
+    });
+
+    // --------------------
+    // MOD #4.2: Pixel sparks burst + fall on YES
+    // AND show "letter after yes" in video-game style pages (replaces text)
+    // --------------------
+    const canvas = document.getElementById("sparkCanvas");
+    const ctx = canvas.getContext("2d");
+    let sparks = [];
+    let animating = false;
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    function burstSparks(){
+      const count = 170;
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2 + 40;
+
+      for (let i = 0; i < count; i++){
+        sparks.push({
+          x: cx + rand(-10, 10),
+          y: cy + rand(-10, 10),
+          vx: rand(-3.2, 3.2),
+          vy: rand(-7.0, -2.5),
+          g: 0.18,
+          life: rand(55, 110),
+          size: Math.random() < 0.6 ? 3 : 4,
+          c: (Math.random() < 0.5) ? "rgba(255, 204, 0, 0.95)" : "rgba(255, 160, 0, 0.95)"
+        });
+      }
+
+      if (!animating){
+        animating = true;
+        requestAnimationFrame(tick);
+      }
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+
+      for (let i = sparks.length - 1; i >= 0; i--){
+        const p = sparks[i];
+        p.vy += p.g;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 1;
+
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+
+        ctx.fillStyle = p.c;
+        ctx.fillRect(Math.round(p.x), Math.round(p.y), p.size, p.size);
+
+        if (p.life <= 0 || p.y > canvas.height + 20){
+          sparks.splice(i, 1);
+        }
+      }
+
+      if (sparks.length > 0){
+        requestAnimationFrame(tick);
+      } else {
+        animating = false;
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+      }
+    }
+
+    // After-YES tear-jerker dialogue pages (replaces textbox a couple lines at a time)
+    const yesPages = [
+      { speaker: "Narrator", text:
+`You said yes.
+
+My heart is so full
+I cannot even pretend to be calm.` },
+
+      { speaker: "Narrator", text:
+`Thank you for choosing me.
+
+Thank you for being my safe place
+and my favorite place.` },
+
+      { speaker: "Narrator", text:
+`I promise to protect your heart.
+I promise to listen even when I am tired.
+
+I promise to keep showing up
+in the small ways that matter.` },
+
+      { speaker: "Narrator", text:
+`I will love you on easy days.
+I will love you on hard days.
+
+I will love you steadily,
+and I will love you loudly.` },
+
+      { speaker: "Narrator", text:
+`Come here.
+
+Let me hold you.
+Let me love you for real.` }
+    ];
+
+    async function playYesDialogue(){
+      for (let i = 0; i < yesPages.length; i++){
+        // reuse typewriter, but it should not trigger head talking anymore (we can keep it, but your request was "when I am talking" so yes, keep it)
+        speakerEl.textContent = yesPages[i].speaker;
+        typing = true;
+        skipRequested = false;
+        textEl.textContent = "";
+        startTalking();
+
+        const full = yesPages[i].text;
+        for (let j = 0; j < full.length; j++){
+          if (skipRequested){
+            textEl.textContent = full;
+            break;
+          }
+          const ch = full[j];
+          textEl.textContent += ch;
+          if (ch === "\n") await sleep(LINE_BREAK_PAUSE_MS);
+          else await sleep(TYPE_SPEED_MS);
+        }
+
+        stopTalking();
+        typing = false;
+
+        // Pause, then move to next "screen" automatically
+        await sleep(1200);
+      }
+    }
+
+    yesBtn.addEventListener("click", async () => {
+      if (accepted) return;
+      accepted = true;
+
+      // MOD #1: png swap to happy
+      portrait.src = "happy.png";
+
+      // MOD #4.2: sparks
+      burstSparks();
+
+      // Replace dialogue with the after-yes tear-jerker pages
+      await playYesDialogue();
+
+      // After it finishes, hide Next if you want (optional)
+      // nextBtn.style.display = "none";
+    });
+
+    // If user clicks Next during typing, skip current page quickly
+    nextBtn.addEventListener("click", () => {
+      if (typing) skipRequested = true;
+    });
+
+  </script>
 </body>
 </html>
