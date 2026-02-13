@@ -1,711 +1,301 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Jillie 💘</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💛</title>
 
-  <!-- Pixel font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7efe0;
+  --panel:#fff7ea;
+  --ink:#2b2b2b;
+  --border:#3a2f2a;
+  --shadow:rgba(0,0,0,0.15);
+  --heart:rgba(255,90,120,0.25);
+  --pixel:"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  font-family:var(--pixel);
+  color:var(--ink);
+}
 
-  <style>
-    :root{
-      /* Beige game UI palette */
-      --bg:#f7f0df;
-      --bg2:#efe4cc;
-      --ink:#2b241a;
-      --muted:#5a4b38;
-      --panel:#fff7e6;
-      --panel2:#f1e1c2;
-      --border:#b28a57;
-      --borderDark:#7a5731;
-      --pink:#ff4b88;
-      --red:#ff4b4b;
-      --green:#30c46c;
-      --shadow: 0 18px 50px rgba(43,36,26,0.22);
-    }
+.bg-hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 10% 20%, var(--heart) 0 12px, transparent 13px),
+    radial-gradient(circle at 30% 70%, var(--heart) 0 10px, transparent 11px),
+    radial-gradient(circle at 70% 30%, var(--heart) 0 14px, transparent 15px),
+    radial-gradient(circle at 85% 75%, var(--heart) 0 11px, transparent 12px);
+  opacity:.7;
+}
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      background:
-        radial-gradient(900px 600px at 15% 15%, rgba(255,75,136,.10), transparent 62%),
-        radial-gradient(900px 650px at 80% 30%, rgba(48,196,108,.10), transparent 62%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      color: var(--ink);
-      padding: 18px;
-      overflow:hidden;
-      font-family:"Press Start 2P", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-    }
+.game{max-width:1100px;margin:auto;padding:18px}
 
-    /* Subtle floating pixel hearts */
-    .hearts{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.22;
-      overflow:hidden;
-    }
-    .heart{
-      position:absolute;
-      width:10px;
-      height:10px;
-      background: var(--pink);
-      transform: rotate(45deg);
-      image-rendering: pixelated;
-      animation: floatUp linear forwards;
-      filter: drop-shadow(0 2px 0 rgba(0,0,0,.06));
-    }
-    .heart:before, .heart:after{
-      content:"";
-      position:absolute;
-      width:10px;height:10px;
-      background: var(--pink);
-    }
-    .heart:before{ left:-6px; top:0; }
-    .heart:after{ top:-6px; left:0; }
-    @keyframes floatUp{
-      to{ transform: translateY(-110vh) rotate(45deg); opacity:0; }
-    }
+.title{
+  font-size:18px;
+  padding:10px;
+  background:var(--panel);
+  border:4px solid var(--border);
+  box-shadow:6px 6px 0 var(--shadow);
+  margin-bottom:14px;
+}
 
-    /* Main layout */
-    .game{
-      width:min(980px, 96vw);
-      display:grid;
-      grid-template-columns: 260px 1fr;
-      gap: 16px;
-      align-items:start;
-    }
-    @media (max-width: 820px){
-      .game{ grid-template-columns: 1fr; }
-    }
+.scene{
+  display:grid;
+  grid-template-columns:1fr 520px;
+  gap:18px;
+}
 
-    /* Left panel */
-    .side{
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.65));
-      border: 4px solid var(--borderDark);
-      box-shadow: var(--shadow);
-      padding: 12px;
-      position:relative;
-    }
-    .side:before{
-      content:"";
-      position:absolute; inset:6px;
-      border: 2px solid rgba(122,87,49,.35);
-      pointer-events:none;
-    }
+.char{
+  padding:12px;
+  background:var(--panel);
+  border:4px solid var(--border);
+  box-shadow:6px 6px 0 var(--shadow);
+  margin-bottom:14px;
+}
 
-    .portrait{
-      position:relative;
-      aspect-ratio: 1 / 1;
-      background: linear-gradient(180deg, var(--panel), var(--panel2));
-      border: 4px solid var(--border);
-      box-shadow: inset 0 0 0 3px rgba(255,255,255,.55);
-      overflow:hidden;
-    }
-    .portrait img{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit:cover;
-      image-rendering: pixelated;
-      filter: contrast(1.05) saturate(1.05);
-      transition: opacity 800ms ease, transform 800ms ease;
-    }
-    #happy{ opacity:0; transform: scale(1.02); }
-    #sad{ opacity:1; transform: scale(1.00); }
+.sprite-wrap{position:relative;height:120px}
 
-    .sideText{
-      margin-top:10px;
-      font-size:10px;
-      line-height:1.9;
-      color: var(--muted);
-    }
+.sprite{
+  width:120px;height:120px;
+  border:3px solid var(--border);
+  background:#fff;
+  image-rendering:pixelated;
+}
 
-    /* Characters row (simple) */
-    .chars{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-top:12px;
-      padding-top:12px;
-      border-top:2px dashed rgba(122,87,49,.35);
-    }
-    .charCard{
-      width: 48%;
-      background: rgba(255,255,255,.6);
-      border: 3px solid rgba(122,87,49,.45);
-      padding: 8px;
-      display:grid;
-      gap: 6px;
-      justify-items:center;
-    }
-    .charLabel{
-      font-size:9px;
-      color: var(--muted);
-      text-align:center;
-      line-height:1.6;
-    }
+.dino{background:#8ccf7a}
+.unicorn{background:#d9c7ff}
 
-    /* Right: dialogue box */
-    .dialogue{
-      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.72));
-      border: 4px solid var(--borderDark);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      position:relative;
-    }
-    .dialogue:before{
-      content:"";
-      position:absolute; inset:6px;
-      border: 2px solid rgba(122,87,49,.35);
-      pointer-events:none;
-    }
+.head{
+  position:absolute;
+  width:48px;height:48px;
+  left:14px;bottom:56px;
+  border:3px solid var(--border);
+  background:#fff;
+  opacity:0;
+}
 
-    .topBar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      padding: 6px 6px 10px 6px;
-    }
-    .badge{
-      font-size:10px;
-      color: var(--muted);
-      padding: 8px 10px;
-      border: 2px solid rgba(122,87,49,.35);
-      background: rgba(255,247,230,.8);
-    }
+.bubble{
+  margin-top:8px;
+  padding:10px;
+  border:3px solid var(--border);
+  background:#fff;
+}
 
-    h1{
-      margin: 8px 6px 10px 6px;
-      font-size: clamp(14px, 2.3vw, 22px);
-      line-height: 1.55;
-      letter-spacing: .02em;
-      color: var(--ink);
-    }
-    p{
-      margin: 0 6px 12px 6px;
-      font-size: clamp(10px, 1.6vw, 13px);
-      line-height: 2.0;
-      color: var(--muted);
-      max-width: 64ch;
-      white-space: pre-line;
-    }
+.portrait-frame{
+  position:relative;
+  width:520px;height:520px;
+  border:4px solid var(--border);
+  background:var(--panel);
+  box-shadow:8px 8px 0 var(--shadow);
+  overflow:hidden;
+}
+#portrait{width:100%;height:100%;object-fit:cover}
+#sparkCanvas{position:absolute;inset:0}
 
-    .progress{
-      margin: 10px 6px 12px 6px;
-      height: 14px;
-      border: 3px solid rgba(122,87,49,.45);
-      background: rgba(255,247,230,.75);
-      overflow:hidden;
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,.45);
-    }
-    .bar{
-      height:100%;
-      width:0%;
-      background: linear-gradient(90deg, var(--pink), #ffb86b, #6fe7ff);
-      transition: width 450ms ease;
-    }
+.dialog-box{
+  margin-top:18px;
+  padding:14px;
+  background:var(--panel);
+  border:4px solid var(--border);
+  box-shadow:8px 8px 0 var(--shadow);
+}
 
-    .choices{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-      padding: 0 6px 6px 6px;
-    }
-    button{
-      font-family:inherit;
-      cursor:pointer;
-      font-size: 11px;
-      padding: 12px 12px;
-      border: 3px solid rgba(122,87,49,.55);
-      background: rgba(255,247,230,.85);
-      color: var(--ink);
-      box-shadow: 0 6px 0 rgba(122,87,49,.20);
-      transition: transform 120ms ease, background 200ms ease;
-      user-select:none;
-    }
-    button:hover{ background: rgba(255,255,255,.90); }
-    button:active{ transform: translateY(2px); box-shadow: 0 4px 0 rgba(122,87,49,.20); }
+.text{
+  min-height:90px;
+  font-size:16px;
+  padding:10px;
+  border:3px solid var(--border);
+  background:#fff;
+  white-space:pre-wrap;
+}
 
-    /* Final arena */
-    .final{
-      margin: 10px 6px 6px 6px;
-      padding: 12px;
-      border: 3px solid rgba(122,87,49,.45);
-      background: rgba(255,247,230,.70);
-      display:none;
-    }
-    .arena{
-      margin-top:10px;
-      height: 120px;
-      border: 3px dashed rgba(122,87,49,.45);
-      background: rgba(255,255,255,.55);
-      position:relative;
-      overflow:hidden;
-    }
+.controls{display:flex;gap:10px;margin-top:12px}
+.btn{
+  padding:10px 14px;
+  border:3px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+}
+.yes{background:#e7ffd9}
+.no{background:#ffe3e3}
 
-    #yesBtn, #noBtn{
-      position:absolute;
-      will-change: transform;
-      transition: transform 240ms ease;
-    }
-
-    #yesBtn{
-      border-color: rgba(48,196,108,.65);
-      background: rgba(48,196,108,.20);
-    }
-    #noBtn{
-      border-color: rgba(255,75,75,.55);
-      background: rgba(255,75,75,.18);
-    }
-
-    .cursorHint{
-      font-size:10px;
-      color: var(--muted);
-      margin-top:10px;
-      line-height:1.8;
-    }
-
-    /* Confetti (kept subtle) */
-    .confetti{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
-    .piece{
-      position:absolute; top:-20px;
-      width:10px; height:14px;
-      opacity:.95;
-      animation: fall linear forwards;
-      border-radius: 2px;
-    }
-    @keyframes fall{
-      to{ transform: translateY(110vh) rotate(720deg); }
-    }
-
-    /* SVG pixel art should look crisp */
-    svg { image-rendering: pixelated; }
-  </style>
+@media(max-width:980px){
+.scene{grid-template-columns:1fr}
+.portrait-frame{width:95vw;height:95vw}
+}
+</style>
 </head>
 
 <body>
-  <div class="hearts" id="hearts"></div>
+<div class="bg-hearts"></div>
 
-  <div class="game">
-    <!-- LEFT PANEL -->
-    <aside class="side">
-      <div class="portrait" aria-label="portrait">
-        <img id="sad" src="sad.jpg" alt="sad portrait">
-        <img id="happy" src="happy.jpg" alt="happy portrait">
-      </div>
+<div class="game">
+<div class="title">❤ Choose your quest ❤</div>
 
-      <div class="sideText" id="sideText">
-        STATUS: missing Jillie…<br>
-        MODE: long distance 💌<br>
-        QUEST: make you smile (and maybe cry)
-      </div>
+<div class="scene">
 
-      <div class="chars">
-        <div class="charCard">
-          <!-- Simple pixel dino SVG -->
-          <svg width="86" height="86" viewBox="0 0 86 86" aria-label="dino">
-            <rect width="86" height="86" fill="transparent"/>
-            <!-- body -->
-            <rect x="18" y="36" width="44" height="28" fill="#39b86b"/>
-            <rect x="22" y="32" width="30" height="10" fill="#39b86b"/>
-            <rect x="26" y="26" width="24" height="10" fill="#39b86b"/>
-            <!-- belly -->
-            <rect x="28" y="42" width="22" height="18" fill="#a6f0c2"/>
-            <!-- eye -->
-            <rect x="38" y="30" width="4" height="4" fill="#2b241a"/>
-            <!-- spikes -->
-            <rect x="24" y="24" width="6" height="4" fill="#ffd36a"/>
-            <rect x="30" y="22" width="6" height="4" fill="#ffd36a"/>
-            <rect x="36" y="20" width="6" height="4" fill="#ffd36a"/>
-            <!-- heart -->
-            <rect x="56" y="46" width="4" height="4" fill="#ff4b88"/>
-            <rect x="60" y="46" width="4" height="4" fill="#ff4b88"/>
-            <rect x="58" y="50" width="4" height="4" fill="#ff4b88"/>
-            <!-- feet -->
-            <rect x="26" y="64" width="10" height="6" fill="#2fa65f"/>
-            <rect x="44" y="64" width="10" height="6" fill="#2fa65f"/>
-          </svg>
-          <div class="charLabel">DINO<br>“TEAM YES”</div>
-        </div>
+<div>
+<div class="char">
+<div class="sprite-wrap">
+<div id="dinoHead" class="head" style="background:#8ccf7a"></div>
+<div class="sprite dino"></div>
+</div>
+<div class="bubble">i love you more</div>
+</div>
 
-        <div class="charCard">
-          <!-- Simple pixel unicorn SVG -->
-          <svg width="86" height="86" viewBox="0 0 86 86" aria-label="unicorn">
-            <rect width="86" height="86" fill="transparent"/>
-            <!-- body -->
-            <rect x="22" y="40" width="40" height="22" fill="#ffffff"/>
-            <rect x="26" y="34" width="22" height="10" fill="#ffffff"/>
-            <!-- mane -->
-            <rect x="44" y="34" width="10" height="8" fill="#ffb3d2"/>
-            <rect x="48" y="40" width="10" height="10" fill="#ffb3d2"/>
-            <!-- horn -->
-            <rect x="40" y="24" width="6" height="10" fill="#ffd36a"/>
-            <rect x="42" y="20" width="2" height="4" fill="#ffd36a"/>
-            <!-- eye -->
-            <rect x="34" y="38" width="4" height="4" fill="#2b241a"/>
-            <!-- envelope -->
-            <rect x="54" y="48" width="10" height="8" fill="#fff7e6"/>
-            <rect x="54" y="48" width="10" height="2" fill="#b28a57"/>
-            <rect x="54" y="54" width="10" height="2" fill="#b28a57"/>
-            <!-- feet -->
-            <rect x="28" y="62" width="8" height="8" fill="#d9d9d9"/>
-            <rect x="46" y="62" width="8" height="8" fill="#d9d9d9"/>
-          </svg>
-          <div class="charLabel">UNICORN<br>“I DELIVER LOVE”</div>
-        </div>
-      </div>
-    </aside>
+<div class="char">
+<div class="sprite-wrap">
+<div id="uniHead" class="head" style="background:#d9c7ff"></div>
+<div class="sprite unicorn"></div>
+</div>
+<div class="bubble">I love you most</div>
+</div>
+</div>
 
-    <!-- RIGHT: DIALOGUE -->
-    <section class="dialogue">
-      <div class="topBar">
-        <div class="badge" id="levelBadge">LEVEL 1 / 5</div>
-        <div class="badge" id="hintBadge">press a button</div>
-      </div>
+<div class="portrait-frame">
+<img id="portrait" src="sad.png">
+<canvas id="sparkCanvas" width="520" height="520"></canvas>
+</div>
 
-      <h1 id="title">Jillie… I have a quest for you 💘</h1>
-      <p id="subtitle">A tiny game, for my favorite person.\n(You’ll know when the final boss appears.)</p>
+</div>
 
-      <div class="progress"><div class="bar" id="bar"></div></div>
+<div class="dialog-box">
+<div id="speaker">Narrator</div>
+<div id="dialogText" class="text"></div>
 
-      <div class="choices" id="choices"></div>
+<div class="controls">
+<button id="nextBtn" class="btn">Next</button>
+<button id="yesBtn" class="btn yes">Yes</button>
+<button id="noBtn" class="btn no">No</button>
+</div>
+</div>
 
-      <div class="final" id="final">
-        <h1 id="finalTitle" style="margin:0 0 10px 0;">FINAL BOSS 😳</h1>
-        <p id="finalText" style="margin:0;">Jillie, will you be my Valentine?</p>
+</div>
 
-        <div class="arena" id="arena">
-          <button id="yesBtn">YES 💘</button>
-          <button id="noBtn">NO… 🙃</button>
-        </div>
+<script>
+// Dialogue pages
+const pages=[
+`Hey love.
 
-        <div class="cursorHint" id="cursorHint">
-          TIP: The heart cursor always finds the right answer.
-        </div>
-      </div>
-    </section>
-  </div>
+I built this like a little game,
+because being with you feels like a quest I want forever.`,
 
-  <div class="confetti" id="confetti"></div>
+`I still catch myself thinking about
+the smallest things you do.
 
-  <script>
-    // ----------------- CUSTOMIZE TEXT HERE -----------------
-    const herName = "Jillie";
-    const years = 4;
+The way you look at me,
+like I am safe to be fully seen.`,
 
-    const yesMessage = [
-      `Jillie… you said YES 😭💘`,
-      ``,
-      `We’ve been together ${years} years, and I still miss you like crazy.`,
-      `Long distance doesn’t change what I know — it just makes the wanting louder.`,
-      ``,
-      `I miss your “being here.”`,
-      `I miss the normal stuff: your voice in the room, the little pauses, the comfort.`,
-      ``,
-      `My favorite memory is sunrise with you —`,
-      `that quiet moment where everything feels soft and possible.`,
-      `That’s what you feel like to me.`,
-      ``,
-      `So here’s my Valentine promise:`,
-      `Until the distance is gone, I’m still choosing you every day.`,
-      `And I’m saving all my hugs for the next sunrise.`,
-      ``,
-      `Happy Valentine’s Day, my love. 💞`
-    ].join("\n");
+`You make ordinary moments feel sacred.
 
-    const steps = [
-      {
-        title: `${herName}, welcome to our little love game 💌`,
-        subtitle: `Press START by choosing the vibe that feels most like us.`,
-        options: [
-          { text: "soft & safe 🫶", next: 1 },
-          { text: "best friends + forever 🤝", next: 1 },
-          { text: "down bad (respectfully) 😭", next: 1 },
-        ]
-      },
-      {
-        title: "Checkpoint: Long Distance 📍",
-        subtitle: `What do you want more of right now?`,
-        options: [
-          { text: "more calls where we don’t rush ⏳", next: 2 },
-          { text: "more visits (so I can hug you) 🧸", next: 2 },
-          { text: "more plans for our future 🗓️", next: 2 },
-        ]
-      },
-      {
-        title: "Memory Quest 🌅",
-        subtitle: `Which moment feels like “home” with me?`,
-        options: [
-          { text: "watching the sunrise together", next: 3 },
-          { text: "late-night talks", next: 3 },
-          { text: "laughing at something dumb", next: 3 },
-        ]
-      },
-      {
-        title: "Bonus Round 💗",
-        subtitle: `Pick the message I wish I could teleport to you right now:`,
-        options: [
-          { text: "“I miss you. Come here.”", next: 4 },
-          { text: "“I’m proud of us.”", next: 4 },
-          { text: "“I’m counting days.”", next: 4 },
-        ]
-      },
-      {
-        title: "Unlock Final Boss 😳",
-        subtitle: `Okay… I’m nervous. Are you ready?`,
-        options: [
-          { text: "I’m ready 💘", next: "final" },
-          { text: "Say it 😭", next: "final" },
-          { text: "If I cry it’s your fault", next: "final" },
-        ]
-      }
-    ];
+You make my heart calm down,
+and then you make it race again.`,
 
-    // ----------------- SOUND (simple chiptune beeps) -----------------
-    const audio = {
-      ctx: null,
-      init(){
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      },
-      beep(freq=600, duration=0.06, type="square", vol=0.06){
-        this.init();
-        const t = this.ctx.currentTime;
-        const o = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-        o.type = type;
-        o.frequency.setValueAtTime(freq, t);
-        g.gain.setValueAtTime(vol, t);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + duration);
-        o.connect(g); g.connect(this.ctx.destination);
-        o.start(t); o.stop(t + duration);
-      },
-      click(){ this.beep(740, 0.05, "square", 0.05); },
-      dodge(){ this.beep(220, 0.07, "square", 0.06); setTimeout(()=>this.beep(196, 0.07, "square", 0.06), 80); },
-      win(){
-        const notes = [784, 988, 1175, 1568];
-        notes.forEach((n,i)=>setTimeout(()=>this.beep(n, 0.09, "square", 0.06), i*90));
-      }
-    };
+`I love you when we are laughing.
+I love you when life is loud.
+I love you when things are hard,
+and you still choose kindness anyway.`,
 
-    // ----------------- UI HOOKS -----------------
-    const heartsEl = document.getElementById("hearts");
-    const confettiEl = document.getElementById("confetti");
+`I am not choosing you for a season.
+I am choosing you for a lifetime.`,
 
-    const levelBadge = document.getElementById("levelBadge");
-    const hintBadge = document.getElementById("hintBadge");
+`Will you be my forever?
+Will you marry me?`
+];
 
-    const titleEl = document.getElementById("title");
-    const subtitleEl = document.getElementById("subtitle");
-    const choicesEl = document.getElementById("choices");
-    const barEl = document.getElementById("bar");
+let pageIndex=0,typing=false;
+const textEl=document.getElementById("dialogText");
+const portrait=document.getElementById("portrait");
+const dinoHead=document.getElementById("dinoHead");
+const uniHead=document.getElementById("uniHead");
 
-    const finalEl = document.getElementById("final");
-    const finalTitleEl = document.getElementById("finalTitle");
-    const finalTextEl = document.getElementById("finalText");
-    const cursorHint = document.getElementById("cursorHint");
+// typewriter
+async function typePage(txt){
+typing=true;
+textEl.textContent="";
+dinoHead.style.opacity=1;
+uniHead.style.opacity=1;
 
-    const arena = document.getElementById("arena");
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
+for(let i=0;i<txt.length;i++){
+textEl.textContent+=txt[i];
+dinoHead.style.transform=`translateY(${i%2?0:-2}px)`;
+uniHead.style.transform=`translateY(${i%2?0:-2}px)`;
+await new Promise(r=>setTimeout(r,24));
+}
 
-    const sadImg = document.getElementById("sad");
-    const happyImg = document.getElementById("happy");
+dinoHead.style.opacity=0;
+uniHead.style.opacity=0;
+typing=false;
+}
 
-    let stepIndex = 0;
+typePage(pages[0]);
 
-    // Smooth movement helper (transform-based)
-    function moveButton(btn, x, y){
-      btn.style.transform = `translate(${x}px, ${y}px)`;
-    }
+document.getElementById("nextBtn").onclick=()=>{
+if(!typing && pageIndex<pages.length-1){
+pageIndex++;
+typePage(pages[pageIndex]);
+}
+};
 
-    // Place buttons initially (stable)
-    let yesPos = {x: 14, y: 14};
-    let noPos = {x: 190, y: 64};
+// YES action
+document.getElementById("yesBtn").onclick=()=>{
+portrait.src="happy.png";
+launchSparks();
+textEl.textContent=`You said yes.
 
-    function layoutButtons(){
-      // Use arena size to position with padding
-      const pad = 10;
-      const w = arena.clientWidth;
-      const h = arena.clientHeight;
+I love you.
+I am so proud to love you.
 
-      const yRect = yesBtn.getBoundingClientRect();
-      const nRect = noBtn.getBoundingClientRect();
+Come here.`;
+};
 
-      // YES top-left
-      yesPos = { x: pad, y: pad };
-      moveButton(yesBtn, yesPos.x, yesPos.y);
+// NO action
+document.getElementById("noBtn").onclick=()=>{
+portrait.src="sad.png";
+textEl.textContent=`That is okay.
 
-      // NO bottom-right (initial)
-      const nx = Math.max(pad, w - (nRect.width || 120) - pad);
-      const ny = Math.max(pad, h - (nRect.height || 40) - pad);
-      noPos = { x: nx, y: ny };
-      moveButton(noBtn, noPos.x, noPos.y);
-    }
+I will stay right here
+until you are ready.`;
+};
 
-    // Debounced dodge to avoid “glitchy”
-    let lastDodge = 0;
-    let noCount = 0;
+// pixel sparks
+const canvas=document.getElementById("sparkCanvas");
+const ctx=canvas.getContext("2d");
+let sparks=[];
 
-    function dodgeNo(){
-      const now = Date.now();
-      if (now - lastDodge < 170) return;
-      lastDodge = now;
+function launchSparks(){
+for(let i=0;i<150;i++){
+sparks.push({
+x:260,y:260,
+vx:(Math.random()-0.5)*6,
+vy:-Math.random()*7,
+g:0.2,
+life:80
+});
+}
+animate();
+}
 
-      audio.dodge();
-      noCount++;
-
-      const pad = 10;
-      const w = arena.clientWidth;
-      const h = arena.clientHeight;
-      const rect = noBtn.getBoundingClientRect();
-
-      const bw = rect.width || 120;
-      const bh = rect.height || 40;
-
-      const maxX = Math.max(pad, w - bw - pad);
-      const maxY = Math.max(pad, h - bh - pad);
-
-      // pick a new spot that isn't too close to YES
-      let x, y;
-      for (let tries=0; tries<8; tries++){
-        x = pad + Math.floor(Math.random() * (maxX - pad + 1));
-        y = pad + Math.floor(Math.random() * (maxY - pad + 1));
-        const dx = x - yesPos.x;
-        const dy = y - yesPos.y;
-        if ((dx*dx + dy*dy) > 9000) break; // keep distance
-      }
-
-      noPos = {x, y};
-      moveButton(noBtn, noPos.x, noPos.y);
-
-      const phrases = [
-        "hmmm…",
-        "be serious 😭",
-        "that’s not allowed",
-        "try again",
-        "Jillie pls",
-        "you know it’s YES 💘"
-      ];
-      hintBadge.textContent = phrases[Math.min(noCount, phrases.length-1)];
-    }
-
-    // Steps
-    function setStep(i){
-      stepIndex = i;
-      const s = steps[i];
-      levelBadge.textContent = `LEVEL ${i+1} / ${steps.length}`;
-      hintBadge.textContent = "press a button";
-
-      titleEl.textContent = s.title;
-      subtitleEl.textContent = s.subtitle;
-
-      barEl.style.width = Math.round((i / steps.length) * 100) + "%";
-
-      choicesEl.innerHTML = "";
-      s.options.forEach(opt=>{
-        const b = document.createElement("button");
-        b.textContent = opt.text;
-        b.addEventListener("click", ()=>{
-          audio.click();
-          if(opt.next === "final") showFinal();
-          else setStep(opt.next);
-        });
-        choicesEl.appendChild(b);
-      });
-    }
-
-    function showFinal(){
-      barEl.style.width = "100%";
-      hintBadge.textContent = "final boss";
-
-      finalEl.style.display = "block";
-      finalTitleEl.textContent = "FINAL BOSS 😳";
-      finalTextEl.textContent = `${herName}, will you be my Valentine?`;
-      cursorHint.textContent = "TIP: Use your heart cursor.";
-
-      // layout after visible
-      requestAnimationFrame(()=>{
-        layoutButtons();
-      });
-    }
-
-    // YES click: flip portrait, big message, confetti + hearts + win sound
-    yesBtn.addEventListener("click", ()=>{
-      audio.win();
-
-      sadImg.style.opacity = "0";
-      happyImg.style.opacity = "1";
-      happyImg.style.transform = "scale(1.00)";
-
-      hintBadge.textContent = "YOU DID IT 💘";
-      finalTitleEl.textContent = "I MISS YOU 😭💞";
-      finalTextEl.textContent = yesMessage;
-
-      // Remove NO button after yes
-      noBtn.style.display = "none";
-      yesBtn.textContent = "come here 🫂";
-
-      launchConfetti(120);
-      burstHearts(24);
-    });
-
-    // NO behavior
-    noBtn.addEventListener("mouseenter", dodgeNo);
-    noBtn.addEventListener("click", dodgeNo);
-
-    // Hearts background
-    function spawnHeart(){
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.style.left = (5 + Math.random()*90) + "vw";
-      h.style.bottom = (-20) + "px";
-      h.style.animationDuration = (3.6 + Math.random()*3.2) + "s";
-      h.style.opacity = (0.12 + Math.random()*0.25);
-      heartsEl.appendChild(h);
-      setTimeout(()=>h.remove(), 8000);
-    }
-    setInterval(()=>spawnHeart(), 750);
-
-    function burstHearts(n){
-      for(let i=0;i<n;i++){
-        setTimeout(spawnHeart, i*35);
-      }
-    }
-
-    // Confetti
-    function launchConfetti(count){
-      confettiEl.innerHTML = "";
-      const colors = ["#ff4b88","#ffcf6a","#6fe7ff","#30c46c","#ffffff"];
-      for(let i=0;i<count;i++){
-        const d = document.createElement("div");
-        d.className = "piece";
-        d.style.left = (Math.random()*100) + "vw";
-        d.style.background = colors[Math.floor(Math.random()*colors.length)];
-        d.style.width = (6 + Math.random()*9) + "px";
-        d.style.height = (8 + Math.random()*16) + "px";
-        d.style.animationDuration = (2.2 + Math.random()*2.6) + "s";
-        d.style.animationDelay = (Math.random()*0.25) + "s";
-        confettiEl.appendChild(d);
-      }
-      setTimeout(()=>confettiEl.innerHTML="", 6000);
-    }
-
-    // Responsive relayout
-    window.addEventListener("resize", ()=>{
-      if (finalEl.style.display !== "none") layoutButtons();
-    });
-
-    // Init
-    setStep(0);
-  </script>
+function animate(){
+ctx.clearRect(0,0,520,520);
+sparks.forEach(p=>{
+p.vy+=p.g;
+p.x+=p.vx;
+p.y+=p.vy;
+p.life--;
+ctx.fillRect(p.x,p.y,4,4);
+});
+sparks=sparks.filter(p=>p.life>0);
+if(sparks.length)requestAnimationFrame(animate);
+}
+</script>
 </body>
 </html>
