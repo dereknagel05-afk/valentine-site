@@ -334,7 +334,7 @@
             <rect x="26" y="64" width="10" height="6" fill="#2fa65f"/>
             <rect x="44" y="64" width="10" height="6" fill="#2fa65f"/>
           </svg>
-          <div class="charLabel">DINO<br>“TEAM YES”</div>
+          <div class="charLabel">DINO<br>“I LOVE YOU MORE”</div>
         </div>
 
         <div class="charCard">
@@ -360,7 +360,7 @@
             <rect x="28" y="62" width="8" height="8" fill="#d9d9d9"/>
             <rect x="46" y="62" width="8" height="8" fill="#d9d9d9"/>
           </svg>
-          <div class="charLabel">UNICORN<br>“I DELIVER LOVE”</div>
+          <div class="charLabel">UNICORN<br>“I LOVE YOU MOST”</div>
         </div>
       </div>
     </aside>
@@ -403,16 +403,16 @@
     const years = 4;
 
     const yesMessage = [
-      `Jillie… you said YES!!!`,
+      `Jillie… you said YES 😭💘`,
       ``,
       `We’ve been together ${years} years, and I still miss you like crazy.`,
-      `Long distance doesn’t change what I know it just makes the wanting louder.`,
+      `Long distance doesn’t change what I know it just makes me want you more.`,
       ``,
-      `I miss your “being here.”`,
+      `I miss your hugs.”`,
       `I miss the normal stuff: your voice in the room, the little pauses, the comfort.`,
       ``,
-      `My favorite memory is sunrise with you`,
-      `that quiet moment where everything feels soft and possible.`,
+      `I miss watching sunrise with you`,
+      `that quiet moment where everything feels soft and warm.`,
       `That’s what you feel like to me.`,
       ``,
       `So here’s my Valentine promise:`,
@@ -522,20 +522,72 @@
 
     let stepIndex = 0;
 
-    // Typewriter effect for game dialogue
-    let typingTimer = null;
-    function typewriter(el, text, speedMs=18){
-      if (typingTimer) clearInterval(typingTimer);
-      let i = 0;
-      el.textContent = "";
-      typingTimer = setInterval(()=>{
-        i++;
-        el.textContent = text.slice(0, i);
-        if (i >= text.length){
-          clearInterval(typingTimer);
-          typingTimer = null;
+    // Typewriter: 3-line rolling dialogue (game style)
+    const stream = {
+      intervalId: null,
+      timeoutId: null,
+      stop(){
+        if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
+        if (this.timeoutId) { clearTimeout(this.timeoutId); this.timeoutId = null; }
+      }
+    };
+
+    function streamDialogue(el, fullText, opts={}){
+      stream.stop();
+
+      const linesVisible = opts.linesVisible ?? 3;
+      const charDelay = opts.charDelay ?? 38;      // slower typing
+      const lineDelay = opts.lineDelay ?? 520;     // pause after each line
+      const blankDelay = opts.blankDelay ?? 360;   // pause for blank lines
+
+      const allLines = String(fullText).split("\n");
+      const windowLines = [];
+      let lineIndex = 0;
+
+      function render(currentPartial=""){
+        const out = windowLines.slice();
+        if (currentPartial !== null) out.push(currentPartial);
+        el.textContent = out.slice(-linesVisible).join("\n");
+      }
+
+      function nextLine(){
+        if (lineIndex >= allLines.length){
+          render(null);
+          return;
         }
-      }, speedMs);
+
+        const line = allLines[lineIndex];
+        lineIndex++;
+
+        // blank line = just a pause, and optionally push an empty line into the window
+        if (line.trim() === ""){
+          windowLines.push("");
+          while (windowLines.length > linesVisible - 1) windowLines.shift();
+          render("");
+          stream.timeoutId = setTimeout(nextLine, blankDelay);
+          return;
+        }
+
+        let i = 0;
+        render("");
+
+        stream.intervalId = setInterval(()=>{
+          i++;
+          render(line.slice(0, i));
+          if (i >= line.length){
+            clearInterval(stream.intervalId);
+            stream.intervalId = null;
+
+            // commit the finished line into the rolling window
+            windowLines.push(line);
+            while (windowLines.length > linesVisible - 1) windowLines.shift();
+
+            stream.timeoutId = setTimeout(nextLine, lineDelay);
+          }
+        }, charDelay);
+      }
+
+      nextLine();
     }
 
     // Smooth movement helper (transform-based)
@@ -664,7 +716,12 @@
 
       hintBadge.textContent = "YOU DID IT 💘";
       finalTitleEl.textContent = "I MISS YOU 😭💞";
-      typewriter(finalTextEl, yesMessage, 18);
+      streamDialogue(finalTextEl, yesMessage, {
+        linesVisible: 3,
+        charDelay: 38,
+        lineDelay: 520,
+        blankDelay: 360
+      });
 
       // Remove NO button after yes
       noBtn.style.display = "none";
